@@ -1,3 +1,4 @@
 # Don't track content of these folders
+commitNpush.sh
 __pycache__/
 .idea
