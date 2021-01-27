@@ -59,7 +59,7 @@ if __name__ == '__main__':
             Gs_sr.append(Gs[-1])
             NoiseAmp_sr.append(NoiseAmp[-1])
             z_opt = torch.full(real_.shape, 0, device=opt.device)
-            m = nn.ZeroPad2d(5)
+            m = nn.ZeroPad2d([3,2,3,2])
             z_opt = m(z_opt)
             Zs_sr.append(z_opt)
         out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1)

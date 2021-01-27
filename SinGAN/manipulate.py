@@ -94,8 +94,8 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
     for G,Z_opt,noise_amp in zip(Gs,Zs,NoiseAmp):
         pad1 = ((opt.ker_size-1)*opt.num_layer)/2
         m = nn.ZeroPad2d(tuple([3,2,3,2])) # nn.ZeroPad2d(int(pad1))
-        nzx = (Z_opt.shape[2]-pad1*2)*scale_v
-        nzy = (Z_opt.shape[3]-pad1*2)*scale_h
+        nzx = (Z_opt.shape[2]-5)*scale_v
+        nzy = (Z_opt.shape[3]-5)*scale_h
 
         images_prev = images_cur
         images_cur = []
@@ -108,7 +108,7 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
             else:
                 z_curr = functions.generate_noise([opt.nc_z,nzx,nzy], device=opt.device)
                 z_curr = m(z_curr)
-
+            print(z_curr.shape, in_s.shape)
             if images_prev == []:
                 I_prev = m(in_s)
                 #I_prev = m(I_prev)
@@ -124,7 +124,6 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
                     I_prev = functions.upsampling(I_prev,z_curr.shape[2],z_curr.shape[3])
                 else:
                     I_prev = m(I_prev)
-
             if n < gen_start_scale:
                 z_curr = Z_opt
 
