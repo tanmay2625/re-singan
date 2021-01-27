@@ -49,7 +49,7 @@ if __name__ == '__main__':
         reals_sr = []
         NoiseAmp_sr = []
         Gs_sr = []
-        real = reals[-1]  # read_image(opt)
+        real = functions.np2torch( img.imread("./Input/test_folder/7_12_crop.png"),opt )    #reals[-1]  # read_image(opt)
         real_ = real
         opt.scale_factor = 1 / in_scale
         opt.scale_factor_init = 1 / in_scale
