@@ -17,8 +17,9 @@ from sklearn.cluster import KMeans
 
 # custom weights initialization called on netG and netD
 
-def read_image(opt):
+def read_image(opt,deepFreeze=0):
     x = img.imread('%s%s' % (opt.input_img,opt.ref_image))
+    if(deepFreeze): x = img.imread('%s/%s'%(opt.input_dir,opt.noisy_input_name))
     return np2torch(x)
 
 def denorm(x):
