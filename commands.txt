@@ -1,0 +1,1 @@
+python customSR.py --input_dir ./Input/customSR --input_name clean.png --noisy_input_name noisy.png --sr_factor 2 --ker_size 2 &>logs.txt

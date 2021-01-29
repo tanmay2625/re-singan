@@ -18,7 +18,7 @@ from sklearn.cluster import KMeans
 # custom weights initialization called on netG and netD
 
 def read_image(opt,deepFreeze=0):
-    x = img.imread('%s%s' % (opt.input_dir,opt.input_name))
+    x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
     if(deepFreeze): x = img.imread('%s/%s'%(opt.input_dir,opt.noisy_input_name))
     x=np2torch(x)
     x = x[:,0:3,:,:]
