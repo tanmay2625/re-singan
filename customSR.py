@@ -45,7 +45,7 @@ if __name__ == '__main__':
         real = functions.adjust_scales2image_SR(real, opt)
         #train(opt, Gs, Zs, reals, NoiseAmp)
         Gs = []
-        dir = generate_dir2save(opt)
+        dir = functions.generate_dir2save(opt)
         Ds = torch.load('%s/Ds.pth' % dir)
         Zs = []
         reals = []
