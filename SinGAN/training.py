@@ -58,7 +58,7 @@ def train(opt,Gs,Zs,reals,NoiseAmp):
     return
 
 def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
-    real_ = functions.read_image(opt,deepFreeze)
+    real_ = functions.read_image(opt,deepFreeze=deepFreeze)
     in_s = 0
     scale_num = 0
     real = imresize(real_,opt.scale1,opt)
@@ -69,7 +69,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
         opt.nfc = min(opt.nfc_init * pow(2, math.floor(scale_num / 4)), 128)
         opt.min_nfc = min(opt.min_nfc_init * pow(2, math.floor(scale_num / 4)), 128)
 
-        opt.out_ = functions.generate_dir2save(opt,deepFreeze)
+        opt.out_ = functions.generate_dir2save(opt,deepFreeze=deepFreeze)
         opt.outf = '%s/%d' % (opt.out_,scale_num)
         try:
             os.makedirs(opt.outf)
@@ -87,7 +87,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
             G_curr.load_state_dict(torch.load('%s/%d/netG.pth' % (opt.out_,scale_num-1)))
             if(not deepFreeze): D_curr.load_state_dict(torch.load('%s/%d/netD.pth' % (opt.out_,scale_num-1)))
 
-        z_curr,in_s,G_curr = train_single_scale(D_curr,G_curr,reals,Gs,Zs,in_s,NoiseAmp,opt,deepFreeze)
+        z_curr,in_s,G_curr = train_single_scale(D_curr,G_curr,reals,Gs,Zs,in_s,NoiseAmp,opt,deepFreeze=deepFreeze)
 
         G_curr = functions.reset_grads(G_curr,False)
         G_curr.eval()
