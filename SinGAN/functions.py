@@ -20,7 +20,9 @@ from sklearn.cluster import KMeans
 def read_image(opt,deepFreeze=0):
     x = img.imread('%s%s' % (opt.input_img,opt.ref_image))
     if(deepFreeze): x = img.imread('%s/%s'%(opt.input_dir,opt.noisy_input_name))
-    return np2torch(x)
+    x=np2torch(x)
+    x = x[:,0:3,:,:]
+    return x
 
 def denorm(x):
     out = (x + 1) / 2
@@ -147,11 +149,11 @@ def calc_gradient_penalty(netD, real_data, fake_data, LAMBDA, device):
     gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean() * LAMBDA
     return gradient_penalty
 
-def read_image(opt):
-    x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
-    x = np2torch(x,opt)
-    x = x[:,0:3,:,:]
-    return x
+# def read_image(opt):
+#     x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
+#     x = np2torch(x,opt)
+#     x = x[:,0:3,:,:]
+#     return x
 
 def read_image_dir(dir,opt):
     x = img.imread('%s' % (dir))
