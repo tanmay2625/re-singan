@@ -43,7 +43,8 @@ if __name__ == '__main__':
         real = functions.read_image(opt)
         opt.min_size = 18
         real = functions.adjust_scales2image_SR(real, opt)
-        #train(opt, Gs, Zs, reals, NoiseAmp)
+        Ds=[]
+        trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
         Gs = []
         dir = functions.generate_dir2save(opt)
         Ds = torch.load('%s/Ds.pth' % dir)
