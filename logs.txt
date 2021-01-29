@@ -1,2 +1,0 @@
-Random Seed:  4019
-*** Train SinGAN for SR ***
