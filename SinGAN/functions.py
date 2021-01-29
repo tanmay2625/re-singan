@@ -182,8 +182,9 @@ def torch2uint8(x):
     x = x.astype(np.uint8)
     return x
 
-def read_image2np(opt):
+def read_image2np(opt,deepFreeze=0):
     x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
+    if(deepFreeze): x = img.imread('%s/%s' % (opt.input_dir,opt.noisy_input_name))
     x = x[:, :, 0:3]
     return x
 
@@ -244,6 +245,23 @@ def load_trained_pyramid(opt, mode_='train'):
     opt.mode = mode
     return Gs,Zs,reals,NoiseAmp
 
+def load_trained_pyramid_custom(opt, mode_='train'):
+#dir = 'TrainedModels/%s/scale_factor=%f' % (opt.input_name[:-4], opt.scale_factor_init)
+    mode = opt.mode
+    opt.mode = 'train'
+    if (mode == 'animation_train') | (mode == 'SR_train') | (mode == 'paint_train'):
+        opt.mode = mode
+    dir = generate_dir2save(opt)
+    if(os.path.exists(dir)):
+        Gs = torch.load('%s/Gs.pth' % dir)
+        Zs = torch.load('%s/Zs.pth' % dir)
+        reals = torch.load('%s/reals.pth' % dir)
+        NoiseAmp = torch.load('%s/NoiseAmp.pth' % dir)
+    else:
+        print('no appropriate trained model is exist, please train first')
+    opt.mode = mode
+    return Gs,Zs,reals,NoiseAmp
+
 def generate_in2coarsest(reals,scale_v,scale_h,opt):
     real = reals[opt.gen_start_scale]
     real_down = upsampling(real, scale_v * real.shape[2], scale_h * real.shape[3])
@@ -253,10 +271,13 @@ def generate_in2coarsest(reals,scale_v,scale_h,opt):
         in_s = upsampling(real_down, real_down.shape[2], real_down.shape[3])
     return in_s
 
-def generate_dir2save(opt):
+def generate_dir2save(opt,deepFreeze=0):
     dir2save = None
     if (opt.mode == 'train') | (opt.mode == 'SR_train'):
-        dir2save = 'TrainedModels/%s/scale_factor=%f,alpha=%d' % (opt.input_name[:-4], opt.scale_factor_init,opt.alpha)
+        if deepFreeze==0:
+            dir2save = 'TrainedModels/%s/scale_factor=%f,alpha=%d' % (opt.input_name[:-4], opt.scale_factor_init,opt.alpha)
+        else:
+            dir2save= 'TrainedModels/%s/scale_factor=%f,alpha=%d,deepFreeze' % (opt.input_name[:-4], opt.scale_factor_init,opt.alpha)
     elif (opt.mode == 'animation_train') :
         dir2save = 'TrainedModels/%s/scale_factor=%f_noise_padding' % (opt.input_name[:-4], opt.scale_factor_init)
     elif (opt.mode == 'paint_train') :
