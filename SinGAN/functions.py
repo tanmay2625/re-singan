@@ -20,7 +20,7 @@ from sklearn.cluster import KMeans
 def read_image(opt,deepFreeze=0):
     x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
     if(deepFreeze): x = img.imread('%s/%s'%(opt.input_dir,opt.noisy_input_name))
-    x=np2torch(x)
+    x=np2torch(x,opt)
     x = x[:,0:3,:,:]
     return x
 
