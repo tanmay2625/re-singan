@@ -233,7 +233,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
             netG.zero_grad()
             output = netD(fake)
             #D_fake_map = output.detach()
-            errG =0  #-output.mean()
+            errG =  -(output.mean()*0)
             errG.backward(retain_graph=True)
             if alpha!=0:
                 loss = nn.MSELoss()
