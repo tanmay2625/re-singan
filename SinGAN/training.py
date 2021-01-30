@@ -82,10 +82,10 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
 
         D_curr,G_curr = init_models(opt)
         if(deepFreeze):
-            D_curr.load_state_dict( Ds[scale_num])
+            D_curr.load_state_dict(torch.load('./TrainedModels/clean/scale_factor=0.793701,alpha=100/%d/netD.pth' % (scale_num)))
         if (nfc_prev==opt.nfc):
             G_curr.load_state_dict(torch.load('%s/%d/netG.pth' % (opt.out_,scale_num-1)))
-            if(not deepFreeze): D_curr.load_state_dict(torch.load('%s/%d/netD.pth' % (opt.out_,scale_num-1)))
+            if not deepFreeze: D_curr.load_state_dict(torch.load('%s/%d/netD.pth' % (opt.out_,scale_num-1)))
 
         z_curr,in_s,G_curr = train_single_scale(D_curr,G_curr,reals,Gs,Zs,in_s,NoiseAmp,opt,deepFreeze=deepFreeze)
 
@@ -96,7 +96,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
             D_curr.eval()
 
         Gs.append(G_curr)
-        if not deepFreeze: Ds.append(D_curr)
+        Ds.append(D_curr)
         Zs.append(z_curr)
         NoiseAmp.append(opt.noise_amp)
 
@@ -200,6 +200,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
                     z_prev = m_image(z_prev)
             else:
                 prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rand',m_noise,m_image,opt)
+                if deepFreeze: prev=draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rec',m_noise,m_image,opt)
                 prev = m_image(prev)
 
             if opt.mode == 'paint_train':

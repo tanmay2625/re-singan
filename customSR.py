@@ -46,8 +46,8 @@ if __name__ == '__main__':
         Ds=[]
         #trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
         Gs = []
-        dir="Output"
-        Ds = torch.load('%s/Ds.pth' % dir)
+        #dir="Output"
+        Ds = []#torch.load('/Ds.pth' % dir)
         Zs = []
         reals = []
         NoiseAmp = []
