@@ -82,7 +82,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
 
         D_curr,G_curr = init_models(opt)
         if(deepFreeze):
-            D_curr= Ds[scale_num]
+            D_curr.load_state_dict( Ds[scale_num])
         if (nfc_prev==opt.nfc):
             G_curr.load_state_dict(torch.load('%s/%d/netG.pth' % (opt.out_,scale_num-1)))
             if(not deepFreeze): D_curr.load_state_dict(torch.load('%s/%d/netD.pth' % (opt.out_,scale_num-1)))
