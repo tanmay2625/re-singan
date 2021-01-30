@@ -163,12 +163,12 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
         
         for j in range(opt.Dsteps):
             # train with real
-            netD.zero_grad()
+            if(not deepFreeze): netD.zero_grad()
 
             output = netD(real).to(opt.device)
             #D_real_map = output.detach()
             errD_real = -output.mean()#-a
-            errD_real.backward(retain_graph=True)
+            if(not deepFreeze) errD_real.backward(retain_graph=True)
             D_x = -errD_real.item()
 
             # train with fake
