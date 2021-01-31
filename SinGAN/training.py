@@ -71,7 +71,11 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
         D0.load_state_dict(torch.load('./TrainedModels/clean/scale_factor=0.793701,alpha=100/%d/netD.pth' % (scale_num)))
         realD_loss= D0(realIm).mean()
         realD_loss= realD_loss.detach()
+        realIm= functions.read_image(opt,1)
+        loss1=D0(realIm).mean()
+        print(realD_loss,loss1)
         del D0,G0
+        exit()
     while scale_num<opt.stop_scale+1:
         opt.nfc = min(opt.nfc_init * pow(2, math.floor(scale_num / 4)), 128)
         opt.min_nfc = min(opt.min_nfc_init * pow(2, math.floor(scale_num / 4)), 128)
@@ -241,9 +245,10 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
         ###########################
         for j in range(opt.Gsteps):
             netG.zero_grad()
+            fake= netG(noise.detach(),prev)
             output = netD(fake)
             #D_fake_map = output.detach()
-            errG =  abs(output.mean()-realD_loss)
+            errG = -(output.mean())#(output.mean()-realD_loss).abs()
             errG.backward(retain_graph=True)
             
             if alpha!=0:
@@ -268,7 +273,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
         z_opt2plot.append(rec_loss)
 
         if epoch % 25 == 0 or epoch == (opt.niter-1):
-            print('scale %d:[%d/%d]' % (len(Gs), epoch, opt.niter))
+            print('scale %d:[%d/%d], errG: %f , rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,rec_loss))
 
         if epoch % 500 == 0 or epoch == (opt.niter-1):
             plt.imsave('%s/fake_sample.png' %  (opt.outf), functions.convert_image_np(fake.detach()), vmin=0, vmax=1)
