@@ -64,7 +64,14 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
     real = imresize(real_,opt.scale1,opt)
     reals = functions.creat_reals_pyramid(real,reals,opt)
     nfc_prev = 0
-
+    realD_loss=0
+    if deepFreeze:
+        realIm= functions.read_image(opt,0)
+        D0,G0= init_models(opt)
+        D0.load_state_dict(torch.load('./TrainedModels/clean/scale_factor=0.793701,alpha=100/%d/netD.pth' % (scale_num)))
+        realD_loss= D0(realIm).mean()
+        realD_loss= realD_loss.detach()
+        del D0,G0
     while scale_num<opt.stop_scale+1:
         opt.nfc = min(opt.nfc_init * pow(2, math.floor(scale_num / 4)), 128)
         opt.min_nfc = min(opt.min_nfc_init * pow(2, math.floor(scale_num / 4)), 128)
@@ -87,8 +94,10 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
             G_curr.load_state_dict(torch.load('%s/%d/netG.pth' % (opt.out_,scale_num-1)))
             if not deepFreeze: D_curr.load_state_dict(torch.load('%s/%d/netD.pth' % (opt.out_,scale_num-1)))
 
-        z_curr,in_s,G_curr = train_single_scale(D_curr,G_curr,reals,Gs,Zs,in_s,NoiseAmp,opt,deepFreeze=deepFreeze)
-
+        z_curr,in_s,G_curr = train_single_scale(D_curr,G_curr,reals,Gs,Zs,in_s,NoiseAmp,opt,deepFreeze=deepFreeze, realD_loss=realD_loss )
+        
+        print(realD_loss)
+        
         G_curr = functions.reset_grads(G_curr,False)
         G_curr.eval()
         if not deepFreeze:
@@ -113,7 +122,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
 
 
 
-def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deepFreeze=0):
+def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deepFreeze=0,realD_loss=0.0 ):
 
     real = reals[len(Gs)]
     opt.nzx = real.shape[2]#+(opt.ker_size-1)*(opt.num_layer)
@@ -234,7 +243,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
             netG.zero_grad()
             output = netD(fake)
             #D_fake_map = output.detach()
-            errG =  -(output.mean())
+            errG =  abs(output.mean()-realD_loss)
             errG.backward(retain_graph=True)
             
             if alpha!=0:
