@@ -70,12 +70,12 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
         D0,G0= init_models(opt)
         D0.load_state_dict(torch.load('./TrainedModels/clean/scale_factor=0.793701,alpha=100/%d/netD.pth' % (scale_num)))
         realD_loss= D0(realIm).mean()
-        realD_loss= realD_loss.detach()
-        realIm= functions.read_image(opt,1)
-        loss1=D0(realIm).mean()
-        print(realD_loss,loss1)
+        #realD_loss= realD_loss.detach()
+        # realIm= functions.read_image(opt,1)
+        # loss1=D0(realIm).mean()
+        # print(realD_loss,loss1)
         del D0,G0
-        exit()
+        # exit()
     while scale_num<opt.stop_scale+1:
         opt.nfc = min(opt.nfc_init * pow(2, math.floor(scale_num / 4)), 128)
         opt.min_nfc = min(opt.min_nfc_init * pow(2, math.floor(scale_num / 4)), 128)
@@ -248,7 +248,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
             fake= netG(noise.detach(),prev)
             output = netD(fake)
             #D_fake_map = output.detach()
-            errG = -(output.mean())#(output.mean()-realD_loss).abs()
+            errG = (output.mean()-realD_loss.detach()).abs() #(output.mean()-realD_loss).abs()
             errG.backward(retain_graph=True)
             
             if alpha!=0:

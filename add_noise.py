@@ -11,7 +11,7 @@ im1 = im1/255
 imt= torch.from_numpy(im1)
 imt = imt.type(torch.FloatTensor)
 print(imt)
-alpha=0.1
+alpha=0.05
 imt= imt + alpha*torch.randn(imt.shape)
 imt= imt.clamp(0,1)
 imt= imt*255
