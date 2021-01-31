@@ -137,7 +137,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
     m_image = nn.ZeroPad2d(tuple([3,2,3,2])) #int(pad_image))
 
     alpha = opt.alpha
-
+    print("alpha",alpha)
     fixed_noise = functions.generate_noise([opt.nc_z,opt.nzx,opt.nzy],device=opt.device)
     z_opt = torch.full(fixed_noise.shape, 0, device=opt.device)
     z_opt = m_noise(z_opt)
