@@ -15,7 +15,7 @@ class logger:
         except:
             pass
         x=datetime.datetime.today()
-        self.logFileName= 'log_alpha=%d_time=%s.txt'%(opt.alpha, x.strftime("%b-%d-%Y-%H:%M:%S"))
+        self.logFileName= 'log_alpha=%d_%s_time=%s.txt'%(opt.alpha,opt.training_name, x.strftime("%b-%d-%Y-%H:%M:%S"))
         self.file= open(('%s/%s')%(dirName,self.logFileName),'x')
     
     @classmethod

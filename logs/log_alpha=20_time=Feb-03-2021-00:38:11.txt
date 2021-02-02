@@ -1,0 +1,7 @@
+Namespace(Dsteps=3, Gsteps=3, alpha=20, beta1=0.5, device=device(type='cuda', index=0), frozenWeight=1, gamma=0.1, input_dir='./Input/customSR', input_name='clean100.png', ker_size=2, lambda_grad=0.1, lr_d=0.001, lr_g=0.001, manualSeed=5723, max_size=250, min_nfc=32, min_nfc_init=32, min_size=25, mode='SR', nc_im=3, nc_z=3, netD='', netG='', nfc=32, nfc_init=32, niter=1000, niter_init=1000, noise_amp=0.1, noise_amp_init=0.1, noisy_input_name='noisy100.png', not_cuda=0, num_layer=5, out='Output', out_='TrainedModels/clean100/scale_factor=0.750000/', padd_size=0, scale_factor=0.75, scale_factor_init=0.75, sr_factor=2.0, stride=1, train_on_last_scale=0, training_name='')
+alpha:20
+scale 0:[0/1000], errG: 0.121221 ,output.mean(): -0.121221, rec_loss:3.688724
+scale 0:[25/1000], errG: 0.091523 ,output.mean(): -0.091523, rec_loss:0.488954
+scale 0:[50/1000], errG: 0.233741 ,output.mean(): -0.233741, rec_loss:0.460148
+scale 0:[75/1000], errG: 0.472928 ,output.mean(): -0.472928, rec_loss:0.505672
+scale 0:[100/1000], errG: 0.402669 ,output.mean(): -0.402669, rec_loss:0.451570

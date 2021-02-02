@@ -97,7 +97,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 ):
         FrzD_curr,G_curr = init_models(opt)
         if(deepFreeze):
             frozenD_dir= functions.generate_dir2save(opt,0)
-            FrzD_curr.load_state_dict(torch.load('./TrainedModels/clean/%s/%d/netD.pth' % (frozenD_dir,scale_num)))
+            FrzD_curr.load_state_dict(torch.load('%s/%d/netD.pth' % (frozenD_dir,scale_num)))
             realD_loss= FrzD_curr(reals_ex[scale_num]).mean().detach()
 
         D_curr, G_curr =  init_models(opt)
@@ -267,13 +267,15 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
             #D_fake_map = output.detach()
             errG= - (output.mean())
             errG.backward(retain_graph=True)
-            
+            errGFrozen= 0
+            outputFrozen= 0
             if deepFreeze:
                 frozenWeight=opt.frozenWeight
-                outputFrozen=  frozenD_curr(fake)
-                errGFrozen = frozenWeight * (outputFrozen.mean()- realD_loss).abs()
+                outputFrozen=  frozenD_curr(fake).mean()
+                errGFrozen = frozenWeight * (outputFrozen - realD_loss).abs()
                 errGFrozen.backward(retain_graph=True)
 
+            
             if alpha!=0:
                 loss = nn.MSELoss()
                 if opt.mode == 'paint_train':
@@ -296,7 +298,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
         z_opt2plot.append(rec_loss)
 
         if epoch % 25 == 0 or epoch == (opt.niter-1):
-            print('scale %d:[%d/%d], errG: %f ,output.mean(): %f, rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),rec_loss))
+            print('scale %d:[%d/%d], errG: %f ,output.mean(): %f, errGFrozen : %f , outputFrozen.mean():%f ,rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),errGFrozen, outputFrozen,rec_loss))
             logger.log_('scale %d:[%d/%d], errG: %f ,output.mean(): %f, rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),rec_loss))
 
         if epoch % 500 == 0 or epoch == (opt.niter-1):

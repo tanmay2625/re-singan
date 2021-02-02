@@ -29,8 +29,34 @@ def saveUpScaledImage(imageName,deepFreeze=0):
     out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1)
     out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
     dir2save = functions.generate_dir2save(opt,deepFreeze)
-    plt.imsave('%s/%s_%s_HR.png' % (dir2save,opt.train_name,opt.imageName[:-4]), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
     
+    plt.imsave('%s/%s_%s_%s_seed=%d_HR.png' % (dir2save,imageName[:-4],x,opt.training_name,opt.manualSeed), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
+
+def trainOnClean():
+    opt.mode = 'train'    
+    print('*** Train SinGAN for SR on clean image***')
+    real = functions.read_image(opt)
+    opt.min_size = 18
+    real = functions.adjust_scales2image_SR(real, opt)
+    Ds=[]
+    tempp= opt.train_on_last_scale
+    opt.train_on_last_scale= 0
+    trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
+    opt.train_on_last_scale=tempp
+    opt.mode=mode
+    saveUpScaledImage(opt.input_name)
+
+def trainOnNoisy():
+    opt.mode='train'
+    Gs = []
+    Ds = []
+    Zs = []
+    reals = []
+    NoiseAmp = []
+    trainCustom(opt,Gs,Zs, Ds,reals,NoiseAmp,deepFreeze=1)
+    opt.mode = mode
+    saveUpScaledImage(opt.noisy_input_name,1)
+
 if __name__ == '__main__':
     parser = get_arguments()
     parser.add_argument('--input_dir', help='input image dir', default='Input/Images')
@@ -38,19 +64,25 @@ if __name__ == '__main__':
     parser.add_argument('--noisy_input_name', help='training image name', default="33039_LR.png")
     parser.add_argument('--sr_factor', help='super resolution factor', type=float, default=4)
     parser.add_argument('--mode', help='task to be done', default='SR')
-    parser.add_argument('--train_on_last_scale',default=0)
+    parser.add_argument('--train_on_last_scale',help='train noisy image exclusively on last scale',default=0)
     parser.add_argument('--frozenWeight',help='weight for adverserial loss by frozen discriminator',default=1)
     parser.add_argument('--training_name',help='add name to the training',default='')
     opt = parser.parse_args()
     opt = functions.post_config(opt)
     opt.alpha=20
     logger.initiate(opt)
+    logger.log_('seed-> %d'%(opt.manualSeed))
+    x=datetime.datetime.today()
+    x= x.strftime("%b-%d-%Y-%H:%M:%S")
+    x=x[-8:] #time of starting
+    
     logger.log_(opt.__repr__())
     Gs = []
     Zs = []
     reals = []
     NoiseAmp = []
     dir2save = functions.generate_dir2save(opt)
+    
     if dir2save is None:
         print('task does not exist')
     #elif (os.path.exists(dir2save)):
@@ -65,37 +97,5 @@ if __name__ == '__main__':
         in_scale, iter_num = functions.calc_init_scale(opt)
         opt.scale_factor = 1 / in_scale
         opt.scale_factor_init = 1 / in_scale
-        opt.mode = 'train'
-        dir2trained_model = functions.generate_dir2save(opt)
-        # if (os.path.exists(dir2trained_model)):
-        #     Gs, Zs, reals, NoiseAmp = functions.load_trained_pyramid(opt)
-        #     opt.mode = mode
-        # else:
-        print('*** Train SinGAN for SR ***')
-        real = functions.read_image(opt)
-        opt.min_size = 18
-        real = functions.adjust_scales2image_SR(real, opt)
-        Ds=[]
-        tempp= opt.train_on_last_scale
-        opt.train_on_last_scale= 0
-        trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
-        opt.train_on_last_scale=tempp
-        opt.mode=mode
-        saveUpScaledImage(opt.input_name)
-        opt.mode='train'
-        Gs = []
-        #dir="Output"
-        Ds = []#torch.load('/Ds.pth' % dir)
-        Zs = []
-        reals = []
-        NoiseAmp = []
-        trainCustom(opt,Gs,Zs, Ds,reals,NoiseAmp,deepFreeze=1)
-        opt.mode = mode
-        saveUpScaledImage(opt.noisy_input_name,1)
-
-
-
-
-
-
-
+        trainOnClean()
+        trainOnNoisy()
