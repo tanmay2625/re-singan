@@ -1,9 +1,10 @@
+from ast import parse
 from config import get_arguments
 from SinGAN.manipulate import *
 from SinGAN.training import *
 from SinGAN.imresize import imresize
 import SinGAN.functions as functions
-
+from SinGAN.logger import *
 
 if __name__ == '__main__':
     parser = get_arguments()
@@ -12,9 +13,12 @@ if __name__ == '__main__':
     parser.add_argument('--noisy_input_name', help='training image name', default="33039_LR.png")
     parser.add_argument('--sr_factor', help='super resolution factor', type=float, default=4)
     parser.add_argument('--mode', help='task to be done', default='SR')
+    parser.add_argument('--train_on_last_scale',default=0)
     opt = parser.parse_args()
     opt = functions.post_config(opt)
-    opt.alpha=10
+    opt.alpha=20
+    logger.initiate(opt)
+    logger.log_(opt.__repr__())
     Gs = []
     Zs = []
     reals = []
@@ -45,7 +49,10 @@ if __name__ == '__main__':
         opt.min_size = 18
         real = functions.adjust_scales2image_SR(real, opt)
         Ds=[]
-        #trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
+        tempp= opt.train_on_last_scale
+        opt.train_on_last_scale= 0
+        trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
+        opt.train_on_last_scale=tempp
         Gs = []
         #dir="Output"
         Ds = []#torch.load('/Ds.pth' % dir)
@@ -55,6 +62,7 @@ if __name__ == '__main__':
         trainCustom(opt,Gs,Zs, Ds,reals,NoiseAmp,deepFreeze=1)
         opt.mode = mode
         print('%f' % pow(in_scale, iter_num))
+        logger.log_('Super Res by %f'%pow(in_scale, iter_num))
         Zs_sr = []
         reals_sr = []
         NoiseAmp_sr = []

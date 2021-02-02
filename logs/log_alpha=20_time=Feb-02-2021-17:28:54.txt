@@ -1,0 +1,45 @@
+Namespace(Dsteps=3, Gsteps=3, alpha=20, beta1=0.5, device=device(type='cuda', index=0), gamma=0.1, input_dir='./Input/customSR', input_name='clean.png', ker_size=2, lambda_grad=0.1, lr_d=0.001, lr_g=0.001, manualSeed=7470, max_size=250, min_nfc=32, min_nfc_init=32, min_size=25, mode='SR', nc_im=3, nc_z=3, netD='', netG='', nfc=32, nfc_init=32, niter=1000, niter_init=1000, noise_amp=0.1, noise_amp_init=0.1, noisy_input_name='noisy.png', not_cuda=0, num_layer=5, out='Output', out_='TrainedModels/clean/scale_factor=0.750000/', padd_size=0, scale_factor=0.75, scale_factor_init=0.75, sr_factor=2.0, stride=1, train_on_last_scale='1')
+alpha:20
+scale 8:[0/1000], errG: 0.247227 ,output.mean(): 0.503536, rec_loss:1.154548
+scale 8:[25/1000], errG: 0.222799 ,output.mean(): 0.527964, rec_loss:0.036272
+scale 8:[50/1000], errG: 0.216044 ,output.mean(): 0.534719, rec_loss:0.017860
+scale 8:[75/1000], errG: 0.211428 ,output.mean(): 0.539336, rec_loss:0.026974
+scale 8:[100/1000], errG: 0.203049 ,output.mean(): 0.547715, rec_loss:0.021564
+scale 8:[125/1000], errG: 0.199687 ,output.mean(): 0.551076, rec_loss:0.025765
+scale 8:[150/1000], errG: 0.194196 ,output.mean(): 0.556567, rec_loss:0.028774
+scale 8:[175/1000], errG: 0.191088 ,output.mean(): 0.559676, rec_loss:0.028299
+scale 8:[200/1000], errG: 0.185418 ,output.mean(): 0.565346, rec_loss:0.035896
+scale 8:[225/1000], errG: 0.183674 ,output.mean(): 0.567089, rec_loss:0.036491
+scale 8:[250/1000], errG: 0.186134 ,output.mean(): 0.564630, rec_loss:0.024682
+scale 8:[275/1000], errG: 0.177332 ,output.mean(): 0.573432, rec_loss:0.038252
+scale 8:[300/1000], errG: 0.176856 ,output.mean(): 0.573907, rec_loss:0.032607
+scale 8:[325/1000], errG: 0.173023 ,output.mean(): 0.577741, rec_loss:0.034614
+scale 8:[350/1000], errG: 0.173084 ,output.mean(): 0.577679, rec_loss:0.035684
+scale 8:[375/1000], errG: 0.170755 ,output.mean(): 0.580009, rec_loss:0.031446
+scale 8:[400/1000], errG: 0.170229 ,output.mean(): 0.580534, rec_loss:0.030840
+scale 8:[425/1000], errG: 0.169815 ,output.mean(): 0.580949, rec_loss:0.036394
+scale 8:[450/1000], errG: 0.166454 ,output.mean(): 0.584309, rec_loss:0.042028
+scale 8:[475/1000], errG: 0.168033 ,output.mean(): 0.582731, rec_loss:0.037809
+scale 8:[500/1000], errG: 0.169837 ,output.mean(): 0.580926, rec_loss:0.039374
+scale 8:[525/1000], errG: 0.164502 ,output.mean(): 0.586261, rec_loss:0.038432
+scale 8:[550/1000], errG: 0.164762 ,output.mean(): 0.586002, rec_loss:0.036825
+scale 8:[575/1000], errG: 0.163249 ,output.mean(): 0.587515, rec_loss:0.035920
+scale 8:[600/1000], errG: 0.163216 ,output.mean(): 0.587548, rec_loss:0.039292
+scale 8:[625/1000], errG: 0.161685 ,output.mean(): 0.589079, rec_loss:0.035362
+scale 8:[650/1000], errG: 0.164143 ,output.mean(): 0.586620, rec_loss:0.036437
+scale 8:[675/1000], errG: 0.160238 ,output.mean(): 0.590526, rec_loss:0.036344
+scale 8:[700/1000], errG: 0.161200 ,output.mean(): 0.589564, rec_loss:0.037437
+scale 8:[725/1000], errG: 0.159423 ,output.mean(): 0.591340, rec_loss:0.040348
+scale 8:[750/1000], errG: 0.159649 ,output.mean(): 0.591114, rec_loss:0.038906
+scale 8:[775/1000], errG: 0.160965 ,output.mean(): 0.589799, rec_loss:0.040463
+scale 8:[800/1000], errG: 0.159080 ,output.mean(): 0.591684, rec_loss:0.039040
+scale 8:[825/1000], errG: 0.158864 ,output.mean(): 0.591899, rec_loss:0.037115
+scale 8:[850/1000], errG: 0.156407 ,output.mean(): 0.594356, rec_loss:0.037228
+scale 8:[875/1000], errG: 0.162405 ,output.mean(): 0.588359, rec_loss:0.044435
+scale 8:[900/1000], errG: 0.158343 ,output.mean(): 0.592421, rec_loss:0.038913
+scale 8:[925/1000], errG: 0.157383 ,output.mean(): 0.593380, rec_loss:0.040539
+scale 8:[950/1000], errG: 0.159044 ,output.mean(): 0.591720, rec_loss:0.042179
+scale 8:[975/1000], errG: 0.163705 ,output.mean(): 0.587059, rec_loss:0.051939
+scale 8:[999/1000], errG: 0.232955 ,output.mean(): 0.517808, rec_loss:0.002573
+Scale: 8, realD_loss: 0.750764 
+Super Res by 2.000000

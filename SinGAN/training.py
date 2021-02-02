@@ -1,12 +1,14 @@
 import SinGAN.functions as functions
 import SinGAN.models as models
 import os
+from numpy.lib.function_base import delete
 import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data
 import math
 import matplotlib.pyplot as plt
 from SinGAN.imresize import imresize
+from SinGAN.logger import *
 
 def train(opt,Gs,Zs,reals,NoiseAmp):
     real_ = functions.read_image(opt)
@@ -61,11 +63,23 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
     real_ = functions.read_image(opt,deepFreeze=deepFreeze)
     in_s = 0
     scale_num = 0
+    if opt.train_on_last_scale:
+        scale_num= opt.stop_scale
+        for i in range(opt.stop_scale):
+            Gx,Dx= init_models(opt)
+            Gs.append(Gx)
+            Ds.append(Dx)
+            del Gx,Dx
     real = imresize(real_,opt.scale1,opt)
     reals = functions.creat_reals_pyramid(real,reals,opt)
+    ###try printing reals
+    
+    #########   remember this
+    
     nfc_prev = 0
     realD_loss=0
-    realIm= functions.read_image(opt,0)
+    realIm_= functions.read_image(opt,0)
+    realIm= imresize(realIm_,opt.scale1,opt)
     reals_ex=[] 
     reals_ex=functions.creat_reals_pyramid(realIm,reals_ex,opt)
     realD_loss=0
@@ -86,7 +100,7 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
 
         D_curr,G_curr = init_models(opt)
         if(deepFreeze):
-            D_curr.load_state_dict(torch.load('./TrainedModels/clean/scale_factor=0.793701,alpha=100/%d/netD.pth' % (scale_num)))
+            D_curr.load_state_dict(torch.load('./TrainedModels/clean/scale_factor=0.793701,alpha=%d/%d/netD.pth' % (opt.alpha,scale_num)))
             realD_loss= D_curr(reals_ex[scale_num]).mean().detach()
     
         if (nfc_prev==opt.nfc):
@@ -95,8 +109,8 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 , levelNo=0):
 
         z_curr,in_s,G_curr = train_single_scale(D_curr,G_curr,reals,Gs,Zs,in_s,NoiseAmp,opt,deepFreeze=deepFreeze, realD_loss=realD_loss )
         
-        print(realD_loss)
-        
+        print('Scale: %d, realD_loss: %f '%(scale_num,realD_loss))
+        logger.log_('Scale: %d, realD_loss: %f '%(scale_num,realD_loss))
         G_curr = functions.reset_grads(G_curr,False)
         G_curr.eval()
         if not deepFreeze:
@@ -138,6 +152,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
 
     alpha = opt.alpha
     print("alpha",alpha)
+    logger.log_("alpha:%d"%(alpha))
     fixed_noise = functions.generate_noise([opt.nc_z,opt.nzx,opt.nzy],device=opt.device)
     z_opt = torch.full(fixed_noise.shape, 0, device=opt.device)
     z_opt = m_noise(z_opt)
@@ -199,22 +214,29 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
                     z_prev = m_image(z_prev)
                     prev = z_prev
                 else:
-                    prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rand',m_noise,m_image,opt)
+                    if not opt.train_on_last_scale: prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rand',m_noise,m_image,opt)
+                    else: prev=reals[-1]
                     prev = m_image(prev)
-                    z_prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rec',m_noise,m_image,opt)
-                    criterion = nn.MSELoss()
-                    RMSE = torch.sqrt(criterion(real, z_prev))
-                    opt.noise_amp = opt.noise_amp_init*RMSE
+                    if not opt.train_on_last_scale:
+                        z_prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rec',m_noise,m_image,opt)
+                        criterion = nn.MSELoss()
+                        RMSE = torch.sqrt(criterion(real, z_prev))
+                        opt.noise_amp = opt.noise_amp_init*RMSE
+                    else:
+                        z_prev= reals[-1]
+                        opt.noise_amp = 0
+
                     z_prev = m_image(z_prev)
             else:
-                prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rand',m_noise,m_image,opt)
-                if deepFreeze: prev=draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rec',m_noise,m_image,opt)
+                if not opt.train_on_last_scale: prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rand',m_noise,m_image,opt)
+                if deepFreeze and not opt.train_on_last_scale: prev=draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rec',m_noise,m_image,opt)
+                if opt.train_on_last_scale: prev=reals[-1]
                 prev = m_image(prev)
 
             if opt.mode == 'paint_train':
                 prev = functions.quant2centers(prev,centers)
                 plt.imsave('%s/prev.png' % (opt.outf), functions.convert_image_np(prev), vmin=0, vmax=1)
-
+           
             if (Gs == []) & (opt.mode != 'SR_train'):
                 noise = noise_
             else:
@@ -243,7 +265,8 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
             #fake= netG(noise.detach(),prev)
             output = netD(fake)
             #D_fake_map = output.detach()
-            errG = (output.mean()-realD_loss).abs() #(output.mean()-realD_loss).abs()
+            if not deepFreeze: errG= - (output.mean())
+            if deepFreeze: errG = (output.mean()-realD_loss).abs() 
             errG.backward(retain_graph=True)
             
             if alpha!=0:
@@ -269,6 +292,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
 
         if epoch % 25 == 0 or epoch == (opt.niter-1):
             print('scale %d:[%d/%d], errG: %f ,output.mean(): %f, rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),rec_loss))
+            logger.log_('scale %d:[%d/%d], errG: %f ,output.mean(): %f, rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),rec_loss))
 
         if epoch % 500 == 0 or epoch == (opt.niter-1):
             plt.imsave('%s/fake_sample.png' %  (opt.outf), functions.convert_image_np(fake.detach()), vmin=0, vmax=1)
