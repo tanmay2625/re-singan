@@ -6,6 +6,31 @@ from SinGAN.imresize import imresize
 import SinGAN.functions as functions
 from SinGAN.logger import *
 
+def saveUpScaledImage(imageName,deepFreeze=0):
+    print('%f' % pow(in_scale, iter_num))
+    logger.log_('Super Res by %f'%pow(in_scale, iter_num))
+    Zs_sr = []
+    reals_sr = []
+    NoiseAmp_sr = []
+    Gs_sr = []
+    real = functions.np2torch( img.imread('./Input/customSR/%s'%(imageName)),opt )    #reals[-1]  # read_image(opt)
+    real_ = real
+    opt.scale_factor = 1 / in_scale
+    opt.scale_factor_init = 1 / in_scale
+    for j in range(1, iter_num + 1, 1):
+        real_ = imresize(real_, pow(1 / opt.scale_factor, 1), opt)
+        reals_sr.append(real_)
+        Gs_sr.append(Gs[-1])
+        NoiseAmp_sr.append(NoiseAmp[-1])
+        z_opt = torch.full(real_.shape, 0, device=opt.device)
+        m = nn.ZeroPad2d([3,2,3,2])
+        z_opt = m(z_opt)
+        Zs_sr.append(z_opt)
+    out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1)
+    out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
+    dir2save = functions.generate_dir2save(opt,deepFreeze)
+    plt.imsave('%s/%s_%s_HR.png' % (dir2save,opt.train_name,opt.imageName[:-4]), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
+    
 if __name__ == '__main__':
     parser = get_arguments()
     parser.add_argument('--input_dir', help='input image dir', default='Input/Images')
@@ -14,6 +39,8 @@ if __name__ == '__main__':
     parser.add_argument('--sr_factor', help='super resolution factor', type=float, default=4)
     parser.add_argument('--mode', help='task to be done', default='SR')
     parser.add_argument('--train_on_last_scale',default=0)
+    parser.add_argument('--frozenWeight',help='weight for adverserial loss by frozen discriminator',default=1)
+    parser.add_argument('--training_name',help='add name to the training',default='')
     opt = parser.parse_args()
     opt = functions.post_config(opt)
     opt.alpha=20
@@ -53,6 +80,9 @@ if __name__ == '__main__':
         opt.train_on_last_scale= 0
         trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
         opt.train_on_last_scale=tempp
+        opt.mode=mode
+        saveUpScaledImage(opt.input_name)
+        opt.mode='train'
         Gs = []
         #dir="Output"
         Ds = []#torch.load('/Ds.pth' % dir)
@@ -61,29 +91,10 @@ if __name__ == '__main__':
         NoiseAmp = []
         trainCustom(opt,Gs,Zs, Ds,reals,NoiseAmp,deepFreeze=1)
         opt.mode = mode
-        print('%f' % pow(in_scale, iter_num))
-        logger.log_('Super Res by %f'%pow(in_scale, iter_num))
-        Zs_sr = []
-        reals_sr = []
-        NoiseAmp_sr = []
-        Gs_sr = []
-        real = functions.np2torch( img.imread("./Input/customSR/noisy.png"),opt )    #reals[-1]  # read_image(opt)
-        real_ = real
-        opt.scale_factor = 1 / in_scale
-        opt.scale_factor_init = 1 / in_scale
-        for j in range(1, iter_num + 1, 1):
-            real_ = imresize(real_, pow(1 / opt.scale_factor, 1), opt)
-            reals_sr.append(real_)
-            Gs_sr.append(Gs[-1])
-            NoiseAmp_sr.append(NoiseAmp[-1])
-            z_opt = torch.full(real_.shape, 0, device=opt.device)
-            m = nn.ZeroPad2d([3,2,3,2])
-            z_opt = m(z_opt)
-            Zs_sr.append(z_opt)
-        out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1)
-        out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
-        dir2save = functions.generate_dir2save(opt)
-        plt.imsave('%s/%s_HR.png' % (dir2save,opt.input_name[:-4]), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
+        saveUpScaledImage(opt.noisy_input_name,1)
+
+
+
 
 
 
