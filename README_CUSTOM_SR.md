@@ -17,4 +17,10 @@
 time python customSR.py --input_dir ./Input/customSR --input_name clean100.png --noisy_input_name noisy100.png --sr_factor 2 --ker_size 2 --niter 1000  --lr_g 0.001 --lr_d 0.001 --custom_sr_alpha 20 --frozenWeight 0.7                  
 ```
  ####  (The trials we performed were limited. Still we observed perticularly that, running less number of iterations on noisy image helped)
- - 
+
+## Note 
+
+- Do not change kernel size argument. While reducing the effective patch size , we reduced kernel size from 3 to 2. And as 2 is an even number, we needed to make custom changes to code that do not accomodate other kernel sizes.
+
+## References
+- SinGAN: : Learning a Generative Model from a Single Natural Image [ Tamar Rott Shaham and Tali Dekel and Tomer Michaeli ]
