@@ -1,3 +1,4 @@
 #rerun on alpha 5
 #rerun some by taking original adv
 # training on single level
+debugging different results for same seed

@@ -1,0 +1,39 @@
+seed-> 4457
+Namespace(Dsteps=3, Gsteps=3, alpha=20, beta1=0.5, custom_sr_alpha=20, device=device(type='cuda', index=0), frozenWeight=3, gamma=0.1, input_dir='./Input/customSR', input_name='clean100.png', ker_size=2, lambda_grad=0.1, lr_d=0.001, lr_g=0.001, manualSeed=4457, max_size=250, min_nfc=32, min_nfc_init=32, min_size=25, mode='SR', nc_im=3, nc_z=3, netD='', netG='', nfc=32, nfc_init=32, niter=25, niter_init=25, noise_amp=0.1, noise_amp_init=0.1, noisy_input_name='noisy100.png', not_cuda=0, num_layer=5, out='Output', out_='TrainedModels/clean100/scale_factor=0.750000/', padd_size=0, scale_factor=0.75, scale_factor_init=0.75, skip_training=1, sr_factor=2.0, stride=1, train_on_last_scale=0, training_name='')
+alpha:20
+scale 0:[0/25], errG: 0.012731 ,output.mean(): -0.012731, rec_loss:5.171772
+scale 0:[24/25], errG: -0.042444 ,output.mean(): 0.042444, rec_loss:0.856695
+Scale: 0, realD_loss: -2.143281 
+alpha:20
+scale 1:[0/25], errG: -0.013365 ,output.mean(): 0.013365, rec_loss:3.646802
+scale 1:[24/25], errG: -0.175188 ,output.mean(): 0.175188, rec_loss:0.637172
+Scale: 1, realD_loss: 1.491464 
+alpha:20
+scale 2:[0/25], errG: -0.119604 ,output.mean(): 0.119604, rec_loss:1.279745
+scale 2:[24/25], errG: 0.261013 ,output.mean(): -0.261013, rec_loss:0.718384
+Scale: 2, realD_loss: 2.636108 
+alpha:20
+scale 3:[0/25], errG: 0.147423 ,output.mean(): -0.147423, rec_loss:1.183264
+scale 3:[24/25], errG: 0.416158 ,output.mean(): -0.416158, rec_loss:0.826109
+Scale: 3, realD_loss: 1.367961 
+alpha:20
+scale 4:[0/25], errG: 0.006731 ,output.mean(): -0.006731, rec_loss:1.238650
+scale 4:[24/25], errG: 0.156571 ,output.mean(): -0.156571, rec_loss:0.986085
+Scale: 4, realD_loss: 0.643341 
+alpha:20
+scale 5:[0/25], errG: 0.199014 ,output.mean(): -0.199014, rec_loss:1.334612
+scale 5:[24/25], errG: 0.039013 ,output.mean(): -0.039013, rec_loss:0.963746
+Scale: 5, realD_loss: 0.738490 
+alpha:20
+scale 6:[0/25], errG: 0.017137 ,output.mean(): -0.017137, rec_loss:1.287074
+scale 6:[24/25], errG: -0.251867 ,output.mean(): 0.251867, rec_loss:0.900578
+Scale: 6, realD_loss: 1.022951 
+alpha:20
+scale 7:[0/25], errG: -0.413904 ,output.mean(): 0.413904, rec_loss:1.340878
+scale 7:[24/25], errG: 0.183172 ,output.mean(): -0.183172, rec_loss:0.961423
+Scale: 7, realD_loss: 0.222770 
+alpha:20
+scale 8:[0/25], errG: 0.026561 ,output.mean(): -0.026561, rec_loss:3.095677
+scale 8:[24/25], errG: 0.806034 ,output.mean(): -0.806034, rec_loss:1.462006
+Scale: 8, realD_loss: 0.189939 
+Super Res by 2.000000

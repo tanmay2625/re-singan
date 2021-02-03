@@ -9,6 +9,7 @@ from SinGAN.logger import *
 def saveUpScaledImage(imageName,deepFreeze=0):
     print('%f' % pow(in_scale, iter_num))
     logger.log_('Super Res by %f'%pow(in_scale, iter_num))
+    global Gs
     Zs_sr = []
     reals_sr = []
     NoiseAmp_sr = []
@@ -26,7 +27,7 @@ def saveUpScaledImage(imageName,deepFreeze=0):
         m = nn.ZeroPad2d([3,2,3,2])
         z_opt = m(z_opt)
         Zs_sr.append(z_opt)
-    out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1)
+    out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1, imageName=imageName)
     out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
     dir2save = functions.generate_dir2save(opt,deepFreeze)
     
@@ -35,19 +36,23 @@ def saveUpScaledImage(imageName,deepFreeze=0):
 def trainOnClean():
     opt.mode = 'train'    
     print('*** Train SinGAN for SR on clean image***')
-    real = functions.read_image(opt)
-    opt.min_size = 18
-    real = functions.adjust_scales2image_SR(real, opt)
-    Ds=[]
+    global Gs,Ds,Zs,reals,NoiseAmp
+    Gs = []
+    Ds = []
+    Zs = []
+    reals = []
+    NoiseAmp = []
     tempp= opt.train_on_last_scale
     opt.train_on_last_scale= 0
     trainCustom(opt, Gs, Zs,Ds, reals, NoiseAmp)
+    print(len(Gs))
     opt.train_on_last_scale=tempp
     opt.mode=mode
     saveUpScaledImage(opt.input_name)
 
 def trainOnNoisy():
     opt.mode='train'
+    global Gs,Ds,Zs,reals,NoiseAmp
     Gs = []
     Ds = []
     Zs = []
@@ -64,21 +69,27 @@ if __name__ == '__main__':
     parser.add_argument('--noisy_input_name', help='training image name', default="33039_LR.png")
     parser.add_argument('--sr_factor', help='super resolution factor', type=float, default=4)
     parser.add_argument('--mode', help='task to be done', default='SR')
-    parser.add_argument('--train_on_last_scale',help='train noisy image exclusively on last scale',default=0)
-    parser.add_argument('--frozenWeight',help='weight for adverserial loss by frozen discriminator',default=1)
-    parser.add_argument('--training_name',help='add name to the training',default='')
+    parser.add_argument('--custom_sr_alpha',help='alpha for custom sr',type=int,default=100)
+    parser.add_argument('--train_on_last_scale',help='train noisy image exclusively on last scale',type=int,default=0)
+    parser.add_argument('--frozenWeight',help='weight for adverserial loss by frozen discriminator',type=float,default=1)
+    parser.add_argument('--training_name',help='add name to the training',type=str,default='')
+    parser.add_argument('--skip_training',help='skips training on clean image',type=int,default=0)
+    parser.add_argument('--tx',help='timstamp',default='')
     opt = parser.parse_args()
     opt = functions.post_config(opt)
-    opt.alpha=20
+    print(type(opt.custom_sr_alpha),opt.custom_sr_alpha)
+    opt.alpha=opt.custom_sr_alpha
     logger.initiate(opt)
     logger.log_('seed-> %d'%(opt.manualSeed))
     x=datetime.datetime.today()
     x= x.strftime("%b-%d-%Y-%H:%M:%S")
     x=x[-8:] #time of starting
-    
+    opt.tx=x
+
     logger.log_(opt.__repr__())
     Gs = []
     Zs = []
+    Ds=[]
     reals = []
     NoiseAmp = []
     dir2save = functions.generate_dir2save(opt)
@@ -97,5 +108,15 @@ if __name__ == '__main__':
         in_scale, iter_num = functions.calc_init_scale(opt)
         opt.scale_factor = 1 / in_scale
         opt.scale_factor_init = 1 / in_scale
-        trainOnClean()
+        real = functions.read_image(opt)
+        opt.min_size = 18
+        real = functions.adjust_scales2image_SR(real, opt)
+
+        Gs = []
+        Ds = []
+        Zs = []
+        reals = []
+        NoiseAmp = []
+        
+        if not opt.skip_training: trainOnClean()
         trainOnNoisy()

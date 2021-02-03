@@ -86,7 +86,7 @@ def generate_gif(Gs,Zs,reals,NoiseAmp,opt,alpha=0.1,beta=0.9,start_scale=2,fps=1
     imageio.mimsave('%s/start_scale=%d/alpha=%f_beta=%f.gif' % (dir2save,start_scale,alpha,beta),images_cur,fps=fps)
     del images_cur
 
-def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,gen_start_scale=0,num_samples=50):
+def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,gen_start_scale=0,num_samples=50,imageName=''):
     #if torch.is_tensor(in_s) == False:
     if in_s is None:
         in_s = torch.full(reals[0].shape, 0, device=opt.device)
@@ -144,7 +144,8 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
                     #plt.imsave('%s/%d_%d.png' % (dir2save,i,n),functions.convert_image_np(I_curr.detach()), vmin=0, vmax=1)
                     #plt.imsave('%s/in_s.png' % (dir2save), functions.convert_image_np(in_s), vmin=0,vmax=1)
             images_cur.append(I_curr)
-        plt.imsave('Input/scale_save/at_scale_%d.png'%(n),SinGAN.functions.convert_image_np(I_curr))
+        if n==0 and len(imageName): plt.imsave('%s/%s_%s_%s_seed=%d_orig_res.png' % ('Output/no_SR/',imageName[:-4],opt.tx,opt.training_name,opt.manualSeed), functions.convert_image_np(I_curr.detach()), vmin=0, vmax=1)
+        #plt.imsave('Input/scale_save/at_scale_%d.png'%(n),SinGAN.functions.convert_image_np(I_curr))
         n+=1
     return I_curr.detach()
 
