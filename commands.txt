@@ -1,1 +1,1 @@
-python customSR.py --input_dir ./Input/customSR --input_name clean.png --noisy_input_name noisy.png --sr_factor 2 --ker_size 2 &>logs.txt
+time python customSR.py --input_dir ./Input/customSR --input_name clean.png --noisy_input_name noisy.png --sr_factor 2 --ker_size 2 --niter 25  --lr_g 0.001 --lr_d 0.001 --custom_sr_alpha 20 --frozenWeight 0.7 --skip_training 1
