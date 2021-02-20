@@ -14,7 +14,7 @@ def saveUpScaledImage(imageName,deepFreeze=0):
     reals_sr = []
     NoiseAmp_sr = []
     Gs_sr = []
-    real = functions.np2torch( img.imread('./Input/customSR/%s'%(imageName)),opt )    #reals[-1]  # read_image(opt)
+    real = functions.np2torch( img.imread('./train_resized_clean/%s'%(imageName)),opt )    #reals[-1]  # read_image(opt)
     real_ = real
     opt.scale_factor = 1 / in_scale
     opt.scale_factor_init = 1 / in_scale
@@ -31,7 +31,7 @@ def saveUpScaledImage(imageName,deepFreeze=0):
     out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
     dir2save = functions.generate_dir2save(opt,deepFreeze)
     
-    plt.imsave('%s/%s_%s_%s_seed=%d_HR.png' % (dir2save,imageName[:-4],x,opt.training_name,opt.manualSeed), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
+    plt.imsave('%s/%s_HR.png' % (dir2save,imageName[:-4]), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
 
 def trainOnClean():
     opt.mode = 'train'    

@@ -1,11 +1,19 @@
-from skimage import io as img
+import cv2
 from SinGAN.functions import np2torch
 import torch
 
-filePath="./Input/customSR/noisy.png"
-folderPath="./Input/"
+filePath="./Input/compare/hr_org_crop_2.jpg"
+folderPath="./Input/compare/"
 
-im1 = img.imread(filePath)
+im1 = cv2.imread(filePath)
+imb= cv2.resize(im1,(250,250), interpolation= cv2.INTER_CUBIC)
+imnn= cv2.resize(im1,(250,250), interpolation= cv2.INTER_NEAREST)
+
+cv2.imwrite(folderPath+"lr_2_cubic.jpg",imb)
+#cv2.imwrite(folderPath+"lr_nearest.jpg",imnn)
+exit()
+im1=imb
+
 im1 = im1/255
 
 imt= torch.from_numpy(im1)
@@ -18,6 +26,6 @@ imt= imt*255
 imt = imt.int()
 print(imt)
 imtnp= imt.numpy()
-img.imsave("./Input/7_12_noisy_"+str(alpha)+".png",imt)
+cv2.imwrite(folderPath+"lr_noisy_"+str(alpha)+".png",imtnp)
 print(im1.shape)
 
