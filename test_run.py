@@ -37,10 +37,8 @@ for im_name in os.listdir("./train_cleaned/"):
             "0.7",
             "--skip_training",
             "1",
-            "--train_on_last_scale",
-            "1"
         ]
     )
     cnt += 1
-    if cnt == 5:
+    if cnt == 10:
         exit()
