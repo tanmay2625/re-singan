@@ -12,7 +12,6 @@ for im_name in os.listdir("./train_cleaned/"):
     ) % (im_name[:-4] + "_noisy.png")
     subprocess.run(
         [
-            "time",
             "python",
             "customSR.py",
             "--input_dir",
@@ -36,7 +35,7 @@ for im_name in os.listdir("./train_cleaned/"):
             "--frozenWeight",
             "0.7",
             "--skip_training",
-            "1",
+            "1"
         ]
     )
     cnt += 1
