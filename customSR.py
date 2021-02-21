@@ -119,4 +119,4 @@ if __name__ == '__main__':
         NoiseAmp = []
         
         if not opt.skip_training: trainOnClean()
-        trainOnNoisy()
+        #trainOnNoisy()

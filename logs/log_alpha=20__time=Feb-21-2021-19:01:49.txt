@@ -1,0 +1,23 @@
+seed-> 3414
+Namespace(Dsteps=3, Gsteps=3, alpha=20, beta1=0.5, custom_sr_alpha=20, device=device(type='cuda', index=0), frozenWeight=0.7, gamma=0.1, input_dir='./train_cleaned/', input_name='2_crop.png', ker_size=2, lambda_grad=0.1, lr_d=0.0005, lr_g=0.0005, manualSeed=3414, max_size=250, min_nfc=32, min_nfc_init=32, min_size=25, mode='SR', nc_im=3, nc_z=3, netD='', netG='', nfc=32, nfc_init=32, niter=1000, niter_init=1000, noise_amp=0.1, noise_amp_init=0.1, noisy_input_name='2_crop.png', not_cuda=0, num_layer=5, out='Output', out_='TrainedModels/2_crop/scale_factor=0.750000/', padd_size=0, scale_factor=0.75, scale_factor_init=0.75, skip_training=0, sr_factor=2.0, stride=1, train_on_last_scale=0, training_name='', tx='19:01:49')
+alpha:20
+scale 0:[0/1000], errG: -0.043554 ,output.mean(): 0.043554, rec_loss:7.432948
+scale 0:[25/1000], errG: -0.069855 ,output.mean(): 0.069855, rec_loss:0.196412
+scale 0:[50/1000], errG: -0.004571 ,output.mean(): 0.004571, rec_loss:0.136912
+scale 0:[75/1000], errG: -0.020159 ,output.mean(): 0.020159, rec_loss:0.131651
+scale 0:[100/1000], errG: -0.045021 ,output.mean(): 0.045021, rec_loss:0.117486
+scale 0:[125/1000], errG: 0.040412 ,output.mean(): -0.040412, rec_loss:0.141624
+scale 0:[150/1000], errG: 0.037910 ,output.mean(): -0.037910, rec_loss:0.133939
+scale 0:[175/1000], errG: 0.065319 ,output.mean(): -0.065319, rec_loss:0.130369
+scale 0:[200/1000], errG: 0.035308 ,output.mean(): -0.035308, rec_loss:0.127798
+scale 0:[225/1000], errG: 0.083648 ,output.mean(): -0.083648, rec_loss:0.127587
+scale 0:[250/1000], errG: 0.069102 ,output.mean(): -0.069102, rec_loss:0.124664
+scale 0:[275/1000], errG: 0.048424 ,output.mean(): -0.048424, rec_loss:0.145106
+scale 0:[300/1000], errG: 0.058512 ,output.mean(): -0.058512, rec_loss:0.138891
+scale 0:[325/1000], errG: 0.092913 ,output.mean(): -0.092913, rec_loss:0.130864
+scale 0:[350/1000], errG: 0.113368 ,output.mean(): -0.113368, rec_loss:0.126125
+scale 0:[375/1000], errG: 0.107094 ,output.mean(): -0.107094, rec_loss:0.138140
+scale 0:[400/1000], errG: 0.121165 ,output.mean(): -0.121165, rec_loss:0.141597
+scale 0:[425/1000], errG: 0.106229 ,output.mean(): -0.106229, rec_loss:0.124379
+scale 0:[450/1000], errG: 0.122361 ,output.mean(): -0.122361, rec_loss:0.137195
+scale 0:[475/1000], errG: 0.159865 ,output.mean(): -0.159865, rec_loss:0.131870
