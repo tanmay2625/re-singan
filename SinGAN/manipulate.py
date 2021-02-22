@@ -104,7 +104,6 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
             if n == 0:
                 z_curr = functions.generate_noise([1,nzx,nzy], device=opt.device)
                 z_curr = z_curr.expand(1,3,z_curr.shape[2],z_curr.shape[3])
-                z_curr_s= z_curr
                 z_curr = m(z_curr)
             else:
                 z_curr = functions.generate_noise([opt.nc_z,nzx,nzy], device=opt.device)
