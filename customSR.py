@@ -14,7 +14,8 @@ def saveUpScaledImage(imageName,deepFreeze=0):
     reals_sr = []
     NoiseAmp_sr = []
     Gs_sr = []
-    real = functions.np2torch( img.imread('./train_resized_clean/%s'%(imageName)),opt )    #reals[-1]  # read_image(opt)
+
+    real = functions.np2torch( img.imread('%s/%s'%(opt.input_dir,imageName)),opt )    #reals[-1]  # read_image(opt)
     real_ = real
     opt.scale_factor = 1 / in_scale
     opt.scale_factor_init = 1 / in_scale
@@ -27,6 +28,13 @@ def saveUpScaledImage(imageName,deepFreeze=0):
         m = nn.ZeroPad2d([3,2,3,2])
         z_opt = m(z_opt)
         Zs_sr.append(z_opt)
+    
+    #only denoising
+    m = nn.ZeroPad2d(tuple([3,2,3,2]))
+    real=m(real)
+    real_out= Gs[-1](real.detach(), real.detach())
+    if len(imageName): plt.imsave('%s/%s_%s_%s_seed=%d_orig_res.png' % ('Output/no_SR/',imageName[:-4],opt.tx,opt.training_name,opt.manualSeed), functions.convert_image_np(real_out.detach()), vmin=0, vmax=1)
+
     out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1, imageName=imageName)
     out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
     dir2save = functions.generate_dir2save(opt,deepFreeze)
@@ -119,4 +127,4 @@ if __name__ == '__main__':
         NoiseAmp = []
         
         if not opt.skip_training: trainOnClean()
-        #trainOnNoisy()
+        trainOnNoisy()

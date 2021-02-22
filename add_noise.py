@@ -2,14 +2,16 @@ import cv2
 from SinGAN.functions import np2torch
 import torch
 
-filePath="./Input/compare/hr_org_crop_2.jpg"
-folderPath="./Input/compare/"
+filePath="./input.tif"
+folderPath="./"
 
 im1 = cv2.imread(filePath)
-imb= cv2.resize(im1,(250,250), interpolation= cv2.INTER_CUBIC)
-imnn= cv2.resize(im1,(250,250), interpolation= cv2.INTER_NEAREST)
+h= im1.shape[0]
+w= im1.shape[1]
+print(h,w)
+imb= cv2.resize(im1,(w//3,h//3), interpolation= cv2.INTER_CUBIC)
 
-cv2.imwrite(folderPath+"lr_2_cubic.jpg",imb)
+cv2.imwrite(folderPath+"input_lr.jpg",imb)
 #cv2.imwrite(folderPath+"lr_nearest.jpg",imnn)
 exit()
 im1=imb

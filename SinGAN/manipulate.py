@@ -104,6 +104,7 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
             if n == 0:
                 z_curr = functions.generate_noise([1,nzx,nzy], device=opt.device)
                 z_curr = z_curr.expand(1,3,z_curr.shape[2],z_curr.shape[3])
+                z_curr_s= z_curr
                 z_curr = m(z_curr)
             else:
                 z_curr = functions.generate_noise([opt.nc_z,nzx,nzy], device=opt.device)
@@ -144,7 +145,6 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
                     #plt.imsave('%s/%d_%d.png' % (dir2save,i,n),functions.convert_image_np(I_curr.detach()), vmin=0, vmax=1)
                     #plt.imsave('%s/in_s.png' % (dir2save), functions.convert_image_np(in_s), vmin=0,vmax=1)
             images_cur.append(I_curr)
-        if n==0 and len(imageName): plt.imsave('%s/%s_%s_%s_seed=%d_orig_res.png' % ('Output/no_SR/',imageName[:-4],opt.tx,opt.training_name,opt.manualSeed), functions.convert_image_np(I_curr.detach()), vmin=0, vmax=1)
         #plt.imsave('Input/scale_save/at_scale_%d.png'%(n),SinGAN.functions.convert_image_np(I_curr))
         n+=1
     return I_curr.detach()
