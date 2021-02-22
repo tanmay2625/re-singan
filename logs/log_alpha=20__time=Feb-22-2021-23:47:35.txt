@@ -1,0 +1,73 @@
+seed-> 5886
+Namespace(Dsteps=3, Gsteps=3, alpha=20, beta1=0.5, custom_sr_alpha=20, device=device(type='cuda', index=0), frozenWeight=0.7, gamma=0.1, input_dir='./Input/different_examples', input_name='landscape.jpg', ker_size=3, lambda_grad=0.1, lr_d=0.001, lr_g=0.001, manualSeed=5886, max_size=250, min_nfc=32, min_nfc_init=32, min_size=25, mode='SR', nc_im=3, nc_z=3, netD='', netG='', nfc=32, nfc_init=32, niter=1, niter_init=1, noise_amp=0.1, noise_amp_init=0.1, noisy_input_name='3_noisy.png', not_cuda=0, num_layer=5, out='Output', out_='TrainedModels/landscape/scale_factor=0.750000/', padd_size=0, scale_factor=0.75, scale_factor_init=0.75, skip_training=0, sr_factor=2.0, stride=1, train_on_last_scale=0, training_name='', tx='23:47:35')
+alpha:20
+scale 0:[0/1], errG: 0.621081 ,output.mean(): -0.621081, rec_loss:1.890847
+Scale: 0, realD_loss: 0.000000 
+alpha:20
+scale 1:[0/1], errG: 0.573598 ,output.mean(): -0.573598, rec_loss:1.965969
+Scale: 1, realD_loss: 0.000000 
+alpha:20
+scale 2:[0/1], errG: 0.564117 ,output.mean(): -0.564117, rec_loss:2.325390
+Scale: 2, realD_loss: 0.000000 
+alpha:20
+scale 3:[0/1], errG: 0.316036 ,output.mean(): -0.316036, rec_loss:2.473534
+Scale: 3, realD_loss: 0.000000 
+alpha:20
+scale 4:[0/1], errG: 0.217854 ,output.mean(): -0.217854, rec_loss:3.184292
+Scale: 4, realD_loss: 0.000000 
+alpha:20
+scale 5:[0/1], errG: 0.062942 ,output.mean(): -0.062942, rec_loss:3.473279
+Scale: 5, realD_loss: 0.000000 
+alpha:20
+scale 6:[0/1], errG: -0.023185 ,output.mean(): 0.023185, rec_loss:3.262843
+Scale: 6, realD_loss: 0.000000 
+alpha:20
+scale 7:[0/1], errG: -0.018229 ,output.mean(): 0.018229, rec_loss:3.226239
+Scale: 7, realD_loss: 0.000000 
+alpha:20
+scale 8:[0/1], errG: 0.343994 ,output.mean(): -0.343994, rec_loss:6.756292
+Scale: 8, realD_loss: 0.000000 
+alpha:20
+scale 9:[0/1], errG: 0.079410 ,output.mean(): -0.079410, rec_loss:4.395631
+Scale: 9, realD_loss: 0.000000 
+alpha:20
+scale 10:[0/1], errG: -0.213172 ,output.mean(): 0.213172, rec_loss:5.069921
+Scale: 10, realD_loss: 0.000000 
+alpha:20
+scale 11:[0/1], errG: -0.220167 ,output.mean(): 0.220167, rec_loss:4.182613
+Scale: 11, realD_loss: 0.000000 
+alpha:20
+scale 12:[0/1], errG: -0.227682 ,output.mean(): 0.227682, rec_loss:4.727383
+Scale: 12, realD_loss: 0.000000 
+Super Res by 2.000000
+alpha:20
+scale 0:[0/1], errG: 0.199840 ,output.mean(): -0.199840, rec_loss:5.046558
+Scale: 0, realD_loss: -0.098434 
+alpha:20
+scale 1:[0/1], errG: 0.148886 ,output.mean(): -0.148886, rec_loss:2.251389
+Scale: 1, realD_loss: -0.141428 
+alpha:20
+scale 2:[0/1], errG: 0.080596 ,output.mean(): -0.080596, rec_loss:1.046794
+Scale: 2, realD_loss: -0.157744 
+alpha:20
+scale 3:[0/1], errG: 0.096147 ,output.mean(): -0.096147, rec_loss:1.082867
+Scale: 3, realD_loss: -0.105389 
+alpha:20
+scale 4:[0/1], errG: 0.132428 ,output.mean(): -0.132428, rec_loss:1.495751
+Scale: 4, realD_loss: 0.315259 
+alpha:20
+scale 5:[0/1], errG: -0.227209 ,output.mean(): 0.227209, rec_loss:1.631876
+Scale: 5, realD_loss: 0.577640 
+alpha:20
+scale 6:[0/1], errG: 0.100479 ,output.mean(): -0.100479, rec_loss:1.676140
+Scale: 6, realD_loss: 0.564048 
+alpha:20
+scale 7:[0/1], errG: -0.238012 ,output.mean(): 0.238012, rec_loss:1.772447
+Scale: 7, realD_loss: 0.631691 
+alpha:20
+scale 8:[0/1], errG: 0.277856 ,output.mean(): -0.277856, rec_loss:3.287093
+Scale: 8, realD_loss: 0.204772 
+alpha:20
+scale 9:[0/1], errG: 0.357539 ,output.mean(): -0.357539, rec_loss:3.158486
+Scale: 9, realD_loss: 0.352448 
+Super Res by 2.000000

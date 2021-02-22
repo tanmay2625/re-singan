@@ -59,6 +59,6 @@ class GeneratorConcatSkip2CleanAdd(nn.Module):
         x = self.body(x)
         x = self.tail(x)
         ind = int((y.shape[2]-x.shape[2])/2)
-        #y = y[:,:,ind:(y.shape[2]-ind),ind:(y.shape[3]-ind)] hack for 5*5
-        y=y[:,:,3:y.shape[2]-2,3:y.shape[3]-2]
+        y = y[:,:,ind:(y.shape[2]-ind),ind:(y.shape[3]-ind)] 
+        #y=y[:,:,3:y.shape[2]-2,3:y.shape[3]-2]
         return x+y

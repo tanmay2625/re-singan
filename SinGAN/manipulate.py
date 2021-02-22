@@ -93,7 +93,7 @@ def SinGAN_generate(Gs,Zs,reals,NoiseAmp,opt,in_s=None,scale_v=1,scale_h=1,n=0,g
     images_cur = []
     for G,Z_opt,noise_amp in zip(Gs,Zs,NoiseAmp):
         pad1 = ((opt.ker_size-1)*opt.num_layer)/2
-        m = nn.ZeroPad2d(tuple([3,2,3,2])) # nn.ZeroPad2d(int(pad1))
+        m = nn.ZeroPad2d(int(pad1))
         nzx = (Z_opt.shape[2]-5)*scale_v
         nzy = (Z_opt.shape[3]-5)*scale_h
 

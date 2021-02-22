@@ -147,8 +147,8 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
         opt.nzx = real.shape[2]+(opt.ker_size-1)*(opt.num_layer)
         opt.nzy = real.shape[3]+(opt.ker_size-1)*(opt.num_layer)
         pad_noise = 0
-    m_noise = nn.ZeroPad2d(tuple([3,2,3,2])) #int(pad_noise))
-    m_image = nn.ZeroPad2d(tuple([3,2,3,2])) #int(pad_image))
+    m_noise = nn.ZeroPad2d( int(pad_noise))
+    m_image = nn.ZeroPad2d(int(pad_image))
 
     alpha = opt.alpha
     print("alpha",alpha)
@@ -190,7 +190,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
         for j in range(opt.Dsteps):
             # train with real
             netD.zero_grad()
-
+            print(real.shape)
             output = netD(real).to(opt.device)
             #D_real_map = output.detach()
             errD_real = -output.mean()#-a
@@ -331,10 +331,10 @@ def draw_concat(Gs,Zs,reals,NoiseAmp,in_s,mode,m_noise,m_image,opt):
                 pad_noise = 0
             for G,Z_opt,real_curr,real_next,noise_amp in zip(Gs,Zs,reals,reals[1:],NoiseAmp):
                 if count == 0:
-                    z = functions.generate_noise([1, Z_opt.shape[2] -5, Z_opt.shape[3]-5 ], device=opt.device)
+                    z = functions.generate_noise([1, Z_opt.shape[2] - 2 * pad_noise, Z_opt.shape[3] - 2 * pad_noise], device=opt.device)
                     z = z.expand(1, 3, z.shape[2], z.shape[3])
                 else:
-                    z = functions.generate_noise([opt.nc_z,Z_opt.shape[2] - 5, Z_opt.shape[3] - 5], device=opt.device)
+                    z = functions.generate_noise([opt.nc_z,Z_opt.shape[2] - 2 * pad_noise, Z_opt.shape[3] - 2 * pad_noise], device=opt.device)
                 z = m_noise(z)
                 # print(G_z.shape,real_curr.shape)
                 G_z = G_z[:,:,0:real_curr.shape[2],0:real_curr.shape[3]]

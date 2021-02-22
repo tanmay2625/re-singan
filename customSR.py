@@ -127,4 +127,9 @@ if __name__ == '__main__':
         NoiseAmp = []
         
         if not opt.skip_training: trainOnClean()
+        
+        #adjust scales related parameters for noisy image
+        real = functions.read_image(opt,deepFreeze=1)
+        real = functions.adjust_scales2image_SR(real, opt)
+        
         trainOnNoisy()
