@@ -82,6 +82,7 @@ if __name__ == '__main__':
     parser.add_argument('--frozenWeight',help='weight for adverserial loss by frozen discriminator',type=float,default=1)
     parser.add_argument('--training_name',help='add name to the training',type=str,default='')
     parser.add_argument('--skip_training',help='skips training on clean image',type=int,default=0)
+    parser.add_argument('--threshold', help='seperates foreground from background', type=int)
     parser.add_argument('--tx',help='timstamp',default='')
     opt = parser.parse_args()
     opt = functions.post_config(opt)

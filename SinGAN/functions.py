@@ -20,6 +20,7 @@ from sklearn.cluster import KMeans
 def read_image(opt,deepFreeze=0):
     x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
     if(deepFreeze): x = img.imread('%s/%s'%(opt.input_dir,opt.noisy_input_name))
+    #print(x.shape)
     x=np2torch(x,opt)
     x = x[:,0:3,:,:]
     return x
@@ -126,6 +127,16 @@ def move_to_gpu(t):
 def move_to_cpu(t):
     t = t.to(torch.device('cpu'))
     return t
+
+def loss(opt, fake, real):
+    mse=0
+    for i in range(real.shape[0]):
+        for j in range(real.shape[1]):
+            if real[0][0][i][j] < opt.threshold :
+                mse += (fake[0][0][i][j]-real[0][0][i][j])**2
+    mse /= (real.shape[0]*real.shape[1])
+    return mse
+
 
 def calc_gradient_penalty(netD, real_data, fake_data, LAMBDA, device):
     #print real_data.size()

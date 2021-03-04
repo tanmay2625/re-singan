@@ -26,9 +26,12 @@ def np2torch(x,opt):
         x = x[:,:,:,None]
         x = x.transpose((3, 2, 0, 1))/255
     else:
-        x = color.rgb2gray(x)
-        x = x[:,:,None,None]
+        #print(x.shape)
+        #x = color.rgb2gray(x)
+        #print(x.shape)
+        x = x[:,:,None]
         x = x.transpose(3, 2, 0, 1)
+        #print(x.shape)
     x = torch.from_numpy(x)
     if not (opt.not_cuda):
         x = move_to_gpu(x)

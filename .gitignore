@@ -2,3 +2,4 @@
 commitNpush.sh
 __pycache__/
 .idea
+env

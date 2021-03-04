@@ -1,3 +1,5 @@
 {
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "python.pythonPath": "/home/tanmay/Desktop/re-singan/env/bin/python3",
+    "git.ignoreLimitWarning": true
 }
