@@ -6,6 +6,7 @@ from skimage import color
 from math import pi
 #from SinGAN.functions import torch2uint8, np2torch
 import torch
+import cv2
 
 
 def denorm(x):
@@ -30,7 +31,7 @@ def np2torch(x,opt):
         #x = color.rgb2gray(x)
         #print(x.shape)
         x = x[:,:,None]
-        x = x.transpose(3, 2, 0, 1)
+        x = x.transpose(3, 2, 0, 1)/255
         #print(x.shape)
     x = torch.from_numpy(x)
     if not (opt.not_cuda):

@@ -1,4 +1,5 @@
 import torch
+import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
@@ -21,7 +22,11 @@ def read_image(opt,deepFreeze=0):
     x = img.imread('%s/%s' % (opt.input_dir,opt.input_name))
     if(deepFreeze): x = img.imread('%s/%s'%(opt.input_dir,opt.noisy_input_name))
     #print(x.shape)
+    #np.set_printoptions(threshold=sys.maxsize)
+    #print(x)
     x=np2torch(x,opt)
+    #torch.set_printoptions(edgeitems=80)
+    #print(x)
     x = x[:,0:3,:,:]
     return x
 
@@ -128,15 +133,8 @@ def move_to_cpu(t):
     t = t.to(torch.device('cpu'))
     return t
 
-def loss(opt, fake, real):
-    mse=0
-    for i in range(real.shape[2]):
-        for j in range(real.shape[3]):
-            if real[0][0][i][j] < opt.threshold :
-                mse += (fake[0][0][i][j]-real[0][0][i][j])**2
-    mse /= (real.shape[2]*real.shape[3])
-    #print(real.shape[2],real.shape[3])
-    return mse
+def loss(fake, real, bg):
+    return (((real-fake)**2)*bg).mean()
 
 
 def calc_gradient_penalty(netD, real_data, fake_data, LAMBDA, device):
@@ -180,13 +178,16 @@ def np2torch(x,opt):
     else:
         x = color.rgb2gray(x)
         x = x[:,:,None,None]
-        x = x.transpose(3, 2, 0, 1)
+        x = x.transpose(3, 2, 0, 1)/255
     x = torch.from_numpy(x)
+    #torch.set_printoptions(edgeitems=80)
     if not(opt.not_cuda):
         x = move_to_gpu(x)
     x = x.type(torch.cuda.FloatTensor) if not(opt.not_cuda) else x.type(torch.FloatTensor)
     #x = x.type(torch.FloatTensor)
+    #print(x)
     x = norm(x)
+    #print(x)
     return x
 
 def torch2uint8(x):

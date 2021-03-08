@@ -72,6 +72,9 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 ):
             del Gx,Dx
     real = imresize(real_,opt.scale1,opt)
     reals = functions.creat_reals_pyramid(real,reals,opt)
+    """ torch.set_printoptions(edgeitems=50)
+    print(reals[0].shape)
+    print(reals[0]) """
     nfc_prev = 0
     realD_loss=0
     realIm_= functions.read_image(opt,0)
@@ -136,8 +139,9 @@ def trainCustom(opt,Gs,Zs,Ds,reals,NoiseAmp, deepFreeze = 0 ):
 
 
 def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deepFreeze=0,realD_loss=0.0, frozenD_curr ={} ):
-
     real = reals[len(Gs)]
+    norm_threshold = (opt.threshold/255-0.5)*2
+    bg = (real < norm_threshold)
     opt.nzx = real.shape[2]#+(opt.ker_size-1)*(opt.num_layer)
     opt.nzy = real.shape[3]#+(opt.ker_size-1)*(opt.num_layer)
     opt.receptive_field = opt.ker_size + ((opt.ker_size-1)*(opt.num_layer-1))*opt.stride
@@ -208,8 +212,8 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
                     opt.noise_amp = 1
                 elif opt.mode == 'SR_train':
                     z_prev = in_s
-                    criterion = nn.MSELoss()
-                    RMSE = torch.sqrt(criterion(real, z_prev))
+                    #criterion = nn.MSELoss()
+                    RMSE = torch.sqrt(functions.loss(real, z_prev, bg))
                     opt.noise_amp = opt.noise_amp_init * RMSE
                     z_prev = m_image(z_prev)
                     prev = z_prev
@@ -220,8 +224,8 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
                     prev = m_image(prev)
                     if not opt.train_on_last_scale:
                         z_prev = draw_concat(Gs,Zs,reals,NoiseAmp,in_s,'rec',m_noise,m_image,opt)
-                        criterion = nn.MSELoss()
-                        RMSE = torch.sqrt(criterion(real, z_prev))
+                        #criterion = nn.MSELoss()
+                        RMSE = torch.sqrt(functions.loss(real, z_prev, bg))
                         opt.noise_amp = opt.noise_amp_init*RMSE
                     else:
                         z_prev= reals[-1]
@@ -286,7 +290,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
                     plt.imsave('%s/z_prev.png' % (opt.outf), functions.convert_image_np(z_prev), vmin=0, vmax=1)
                 plt.imsave('%s/%dz_prev.png' % (opt.outf,j), functions.convert_image_np(z_prev), vmin=0, vmax=1)
                 Z_opt = opt.noise_amp*z_opt+z_prev
-                rec_loss = alpha*functions.loss(opt, netG(Z_opt.detach(),z_prev),real)
+                rec_loss = alpha*functions.loss(netG(Z_opt.detach(),z_prev),real, bg)
                 rec_loss.backward(retain_graph=True)
                 rec_loss = rec_loss.detach()
             else:
