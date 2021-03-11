@@ -6,7 +6,7 @@ from skimage import color
 from math import pi
 #from SinGAN.functions import torch2uint8, np2torch
 import torch
-import cv2
+#import cv2
 
 
 def denorm(x):
