@@ -1,2 +1,0 @@
-alpha:100
-scale 0:[0/2000], errG: 0.768858 ,output.mean(): -1.574321, rec_loss:28.709486

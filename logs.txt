@@ -1,4 +1,4 @@
-Random Seed:  9213
+xRandom Seed:  9213
 *** Train SinGAN for SR ***
 GeneratorConcatSkip2CleanAdd(
   (head): ConvBlock(
