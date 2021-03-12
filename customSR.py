@@ -126,6 +126,6 @@ if __name__ == '__main__':
         Zs = []
         reals = []
         NoiseAmp = []
-        
+        print(opt)
         if not opt.skip_training: trainOnClean()
         trainOnNoisy()
