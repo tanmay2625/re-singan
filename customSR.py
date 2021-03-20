@@ -38,7 +38,7 @@ def saveUpScaledImage(imageName,deepFreeze=0):
     out = SinGAN_generate(Gs_sr, Zs_sr, reals_sr, NoiseAmp_sr, opt, in_s=reals_sr[0], num_samples=1, imageName=imageName)
     out = out[:, :, 0:int(opt.sr_factor * reals[-1].shape[2]), 0:int(opt.sr_factor * reals[-1].shape[3])]
     dir2save = functions.generate_dir2save(opt,deepFreeze)
-    
+    print(out.shape)
     plt.imsave('%s/%s_HR.png' % (dir2save,imageName[:-4]), functions.convert_image_np(out.detach()), vmin=0, vmax=1, cmap="gray")
 
 def trainOnClean():
