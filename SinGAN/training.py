@@ -306,7 +306,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None,deep
 
         if epoch % 25 == 0 or epoch == (opt.niter-1):
             print('scale %d:[%d/%d], errG: %f ,output.mean(): %f, errGFrozen : %f , outputFrozen.mean():%f ,rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),errGFrozen, outputFrozen,rec_loss))
-            logger.log_('scale %d:[%d/%d], errG: %f ,output.mean(): %f, rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,output.mean(),rec_loss))
+            logger.log_('scale %d:[%d/%d], errG: %f , errGfrozen : %f, rec_loss:%f' % (len(Gs), epoch, opt.niter,errG,errGFrozen,rec_loss))
 
         if epoch % 500 == 0 or epoch == (opt.niter-1):
             plt.imsave('%s/fake_sample.png' %  (opt.outf), functions.convert_image_np(fake.detach()), vmin=0, vmax=1)
